@@ -1,5 +1,7 @@
 # Rbone
 
+[![Build Status](https://secure.travis-ci.org/majormajors/rbone.png)](http://travis-ci.org/majormajors/rbone)
+
 Rbone makes it easy to write Arduino-style applications for your BeagleBone in Ruby.
 
 ## Installation
