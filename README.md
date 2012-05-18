@@ -1,6 +1,6 @@
 # Rbone
 
-TODO: Write a gem description
+Rbone makes it easy to write Arduino-style applications for your BeagleBone in Ruby.
 
 ## Installation
 
