@@ -81,7 +81,7 @@ module Rbone
 
       if value == HIGH || value == LOW
         File.open(filename, 'w') do |f|
-            f.write("%s" % [value])
+         f.write("%s" % [value])
         end
         return true
       else
@@ -119,11 +119,9 @@ module Rbone
     end
 
     def cleanup!
-      puts "cleanup!"
     end
 
     def pinUnexport(pin)
-      
     end
   end
 end
