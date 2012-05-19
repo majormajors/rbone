@@ -2,8 +2,11 @@ require 'spec_helper'
 require 'rbone/app'
 
 describe Rbone::App do
-  before :all do
+  before :each do
+    @app = Rbone::App.new
+
     FileUtils.mkdir_p('/sys/class/gpio')
+    FileUtils.touch(%w(export unexport))
 
     # mock USR leds
     %w(0 1 2 3).map{ |n| "/sys/devices/platform/leds-gpio/leds/beaglebone::usr#{n}" }.each do |base_dir|
@@ -12,8 +15,8 @@ describe Rbone::App do
     end
   end
 
-  before :each do
-    @app = Rbone::App.new
+  after :each do
+    FileUtils.rm_rf('/sys')
   end
 
   def mock_export(pin)
@@ -27,6 +30,30 @@ describe Rbone::App do
     value = f.read
     f.close
     value
+  end
+
+  describe '#pinMode' do
+    it "writes the appropriate value to the export file" do
+      mock_export(P8_3)
+      @app.pinMode(P8_3, OUTPUT).should be_true
+      read_value("/sys/class/gpio/export").should == "38"
+    end
+
+    it "adds the exported pin to the list" do
+      mock_export(P8_3)
+      @app.pinMode(P8_3, OUTPUT).should be_true
+      @app.instance_variable_get(:@exported_pins).include?(38).should be_true
+    end
+
+    it "writes the appropriate value to the pin's direction file" do
+      mock_export(P8_3)
+      @app.pinMode(P8_3, INPUT).should be_true
+      read_value("/sys/class/gpio/gpio38/direction").should == 'in'
+    end
+
+    it "raises an exception if the pin is invalid" do
+      lambda{ @app.pinMode(9001, INPUT) }.should raise_error(Rbone::PinRefError)
+    end
   end
 
   describe '#digitalWrite' do

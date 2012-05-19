@@ -51,15 +51,15 @@ module Rbone
     def pinMode(pin, direction)
       if DIGITAL_PINS.include?(pin)
         File.open('/sys/class/gpio/export', 'w') do |f|
-          f.write("%s\n" % [pin])
+          f.write("%s" % [pin])
         end
 
         filename = '/sys/class/gpio/gpio%d/direction' % [pin]
         File.open(filename, 'w') do |f|
           if direction == INPUT
-            f.write("in\n")
+            f.write("in")
           else
-            f.write("out\n")
+            f.write("out")
           end
         end
 
