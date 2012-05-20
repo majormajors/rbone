@@ -20,7 +20,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Blink an LED!
+
+```ruby
+#!/usr/bin/env ruby
+
+require 'rbone'
+
+Rbone::App.new do |app|
+  app.setup do
+    pinMode(P8_3, OUTPUT)
+  end
+
+  app.loop do
+    digitalWrite(P8_3, HIGH)
+    delay(1000)
+    digitalWrite(P8_3, LOW)
+    delay(1000)
+  end
+end
+```
 
 ## Contributing
 
