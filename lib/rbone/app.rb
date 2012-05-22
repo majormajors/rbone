@@ -51,7 +51,7 @@ module Rbone
     def pinMode(pin, direction)
       if DIGITAL_PINS.include?(pin)
         File.open('/sys/class/gpio/export', 'w') do |f|
-          f.write("%s" % [pin])
+          f.write(pin.to_s)
         end
 
         filename = '/sys/class/gpio/gpio%d/direction' % [pin]
@@ -81,7 +81,7 @@ module Rbone
 
       if value == HIGH || value == LOW
         File.open(filename, 'w') do |f|
-         f.write("%s" % [value])
+         f.write(value.to_s)
         end
         return true
       else
@@ -107,7 +107,7 @@ module Rbone
       if ANALOG_PINS.include?(pin)
         filename = "/sys/devices/platform/tsc/#{pin}"
         File.open(filename, 'r') do |f|
-          return
+          return f.read.to_i
         end
       else
         raise PinRefError, "#{pin} is not a valid analog pin reference"
@@ -119,9 +119,12 @@ module Rbone
     end
 
     def cleanup!
-    end
-
-    def pinUnexport(pin)
+      f = File.open('/sys/class/gpio/unexport', 'w')
+      while pin = @exported_pins.pop
+        f.write(pin.to_s)
+        f.flush
+      end
+      f.close
     end
   end
 end
