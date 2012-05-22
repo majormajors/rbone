@@ -24,6 +24,7 @@ module Rbone
 
     def initialize
       @exported_pins = []
+      @start_time = Time.now
       if block_given?
         yield(self)
       end
@@ -118,6 +119,22 @@ module Rbone
 
     def delay(ms)
       sleep(ms.to_f / 1000.0)
+    end
+
+    def delayMicroseconds(ms)
+      sleep(ms.to_f / 1_000_000)
+    end
+
+    def millis
+      (Time.now.to_i - @start_time.to_i) * 1000
+    end
+
+    def micros
+      (Time.now.to_i - @start_time.to_i) * 1_000_000
+    end
+
+    def map(x, a1, a2, b1, b2)
+      b1 + (x - a1) * (b2 - b1) / (a2 - a1)
     end
 
     def cleanup!
