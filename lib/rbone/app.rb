@@ -81,7 +81,7 @@ module Rbone
 
       if value == HIGH || value == LOW
         File.open(filename, 'w') do |f|
-         f.write(value.to_s)
+          f.write(value.to_s)
         end
         return true
       else
@@ -92,7 +92,9 @@ module Rbone
     def digitalRead(pin)
       if DIGITAL_PINS.include?(pin)
         filename = '/sys/class/gpio/gpio%d/value' % [pin]
-        value = open(filename).read
+        File.open(filename, 'r') do |f|
+          value = f.read.chomp
+        end
         case value.chomp
         when '0' then LOW
         when '1' then HIGH
