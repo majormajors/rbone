@@ -169,7 +169,7 @@ module Rbone
         File.open(filename, 'r') do |f|
           value = f.read.chomp
         end
-        case value.chomp
+        case value
         when '0' then LOW
         when '1' then HIGH
         else nil
