@@ -13,6 +13,12 @@ describe Rbone::App do
       FileUtils.mkdir_p(base_dir)
       FileUtils.touch(%w(brightness max_brightness trigger uevent).map{ |f| "#{base_dir}/#{f}" })
     end
+
+    # mock pin mux files
+    FileUtils.mkdir_p("/sys/kernel/debug/omap_mux")
+    Rbone::App::PIN_MUX_REF.values.each do |pin_mux_file|
+      FileUtils.touch("/sys/kernel/debug/omap_mux/%s" % [pin_mux_file])
+    end
   end
 
   after :each do
