@@ -125,17 +125,20 @@ module Rbone
           f.write(pin.to_s)
         end
 
+        muxfile = File.open("/sys/kernel/debug/omap_mux/%s" % [PIN_MUX_REF[pin]], 'w')
+
         filename = '/sys/class/gpio/gpio%d/direction' % [pin]
         File.open(filename, 'w') do |f|
           if direction == INPUT
             f.write("in")
-            muxfile = File.open("/sys/kernel/debug/omap_mux/%s" % [PIN_MUX_REF[pin]], 'w')
             muxfile.write("2F")
-            muxfile.close
           else
             f.write("out")
+            muxfile.write("7")
           end
         end
+
+        muxfile.close
 
         @exported_pins.push(pin)
       else
